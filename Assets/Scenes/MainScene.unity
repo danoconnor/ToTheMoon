@@ -398,5 +398,5 @@ MonoBehaviour:
   Player: {fileID: 1219022203}
   PlaneEnemy: {fileID: 2313400859118269439, guid: 2b5a0a0931a25a04b88ccae11415acf3,
     type: 3}
-  NumEnemies: 0
-  RangeToSpawnEnemies: 0
+  NumEnemies: 5
+  RangeToSpawnEnemies: 20

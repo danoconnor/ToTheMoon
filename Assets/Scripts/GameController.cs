@@ -37,10 +37,35 @@ public class GameController : MonoBehaviour
             _enemyPositions.Add(spawnPos);
             Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
         }
+
+        int belowCount = _enemyPositions.Count(pos => pos.y < playerPos.y && playerPos.y - pos.y < RangeToSpawnEnemies);
+        for (int i = belowCount; i < NumEnemies; i++)
+        {
+            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x - RangeToSpawnEnemies, playerPos.x + RangeToSpawnEnemies),
+                                            Random.Range(playerPos.y - RangeToSpawnEnemies, playerPos.y));
+            _enemyPositions.Add(spawnPos);
+            Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
+        }
+
+        int rightCount = _enemyPositions.Count(pos => pos.x > playerPos.x && pos.x - playerPos.x < RangeToSpawnEnemies);
+        for (int i = rightCount; i < NumEnemies; i++)
+        {
+            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x, playerPos.x + RangeToSpawnEnemies),
+                                            Random.Range(playerPos.y - RangeToSpawnEnemies, playerPos.y + RangeToSpawnEnemies));
+            _enemyPositions.Add(spawnPos);
+            Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
+        }
+
+        int leftCount = _enemyPositions.Count(pos => pos.x < playerPos.x && playerPos.x - pos.x < RangeToSpawnEnemies);
+        for (int i = leftCount; i < NumEnemies; i++)
+        {
+            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x - RangeToSpawnEnemies, playerPos.x),
+                                            Random.Range(playerPos.y - RangeToSpawnEnemies, playerPos.y + RangeToSpawnEnemies));
+            _enemyPositions.Add(spawnPos);
+            Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
+        }
     }
 
     private Rigidbody2D _player;
     private List<Vector2> _enemyPositions;
-
-    private const string _playerTag = "Player";
 }
