@@ -8,8 +8,11 @@ public class PlayerController : MonoBehaviour
     public float RotationRate;
     public float MaxSpeed;
 
+    public GameObject MainCameraObject;
+
     void Start()
     {
+        _cameraPosition = MainCameraObject.GetComponent<Transform>();
         _player = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _sprites = Resources.LoadAll<Sprite>(SpriteName);
@@ -48,8 +51,11 @@ public class PlayerController : MonoBehaviour
         {
             _spriteRenderer.sprite = _sprites[0];
         }
+
+        _cameraPosition.position = new Vector3(_player.position.x, _player.position.y, _cameraPosition.position.z);
     }
 
+    private Transform _cameraPosition;
     private Rigidbody2D _player;
     private SpriteRenderer _spriteRenderer;
     private Sprite[] _sprites;
