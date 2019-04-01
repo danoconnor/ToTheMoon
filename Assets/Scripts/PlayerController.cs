@@ -27,13 +27,34 @@ public class PlayerController : MonoBehaviour
 
     private void updateRotation()
     {
+        if (Mathf.Abs(_player.angularVelocity) < RotationRate)
+        {
+            _player.angularVelocity = 0;
+        }
+
+        // If the player is spinning due to a collision, the arrows should just slow the spin rate until it is at zero
+        // Then the player will regain control of the ship and they can continue to rotate like normal
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            _player.rotation += RotationRate;
+            if (Mathf.Approximately(_player.angularVelocity, 0))
+            {
+                _player.rotation += RotationRate;
+            }
+            else
+            {
+                _player.angularVelocity += RotationRate;
+            }
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            _player.rotation -= RotationRate;
+            if (Mathf.Approximately(_player.angularVelocity, 0))
+            {
+                _player.rotation -= RotationRate;
+            }
+            else
+            {
+                _player.angularVelocity -= RotationRate;
+            }
         }
     }
 
