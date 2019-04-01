@@ -188,7 +188,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 15, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -259,7 +259,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -305,6 +305,7 @@ MonoBehaviour:
   RotationRate: 1.5
   MaxSpeed: 10
   MainCameraObject: {fileID: 519420028}
+  CameraOffset: 15
 --- !u!212 &1219022208
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -400,4 +401,7 @@ MonoBehaviour:
   PlaneEnemy: {fileID: 2313400859118269439, guid: 2b5a0a0931a25a04b88ccae11415acf3,
     type: 3}
   NumEnemies: 5
-  RangeToSpawnEnemies: 20
+  RangeToSpawnObjects: 50
+  SpawnBufferFromPlayerHorizontal: 20
+  SpawnBufferFromPlayerAbove: 50
+  SpawnBufferFromPlayerBelow: 20

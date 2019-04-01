@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float MaxSpeed;
 
     public GameObject MainCameraObject;
+    public float CameraOffset;
 
     void Start()
     {
@@ -20,7 +19,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Change rotation, then add new direction to velocity
+        updateRotation();
+        updateVelocity();
+        updateSprite();
+        updateCameraPosition();
+    }
+
+    private void updateRotation()
+    {
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             _player.rotation += RotationRate;
@@ -29,7 +35,10 @@ public class PlayerController : MonoBehaviour
         {
             _player.rotation -= RotationRate;
         }
-        
+    }
+
+    private void updateVelocity()
+    {
         if (Input.GetKey(KeyCode.UpArrow))
         {
             float rotationInRads = _player.rotation * Mathf.Deg2Rad;
@@ -44,15 +53,17 @@ public class PlayerController : MonoBehaviour
             }
 
             _player.velocity = newVelocity;
-
-            _spriteRenderer.sprite = _sprites[1];
         }
-        else
-        {
-            _spriteRenderer.sprite = _sprites[0];
-        }
+    }
 
-        _cameraPosition.position = new Vector3(_player.position.x, _player.position.y, _cameraPosition.position.z);
+    private void updateSprite()
+    {
+        _spriteRenderer.sprite = Input.GetKey(KeyCode.UpArrow) ? _sprites[1] : _sprites[0];
+    }
+
+    private void updateCameraPosition()
+    {
+        _cameraPosition.position = new Vector3(_player.position.x, _player.position.y + CameraOffset, _cameraPosition.position.z);
     }
 
     private Transform _cameraPosition;

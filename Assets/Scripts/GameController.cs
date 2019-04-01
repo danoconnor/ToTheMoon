@@ -9,15 +9,18 @@ public class GameController : MonoBehaviour
     public GameObject PlaneEnemy;
 
     public int NumEnemies;
-    public float RangeToSpawnEnemies;
+    public float RangeToSpawnObjects;
+    public float SpawnBufferFromPlayerHorizontal;
+    public float SpawnBufferFromPlayerAbove;
+    public float SpawnBufferFromPlayerBelow;
 
-    void Start()
+    public void Start()
     {
         _player = Player.GetComponent<Rigidbody2D>();
         _enemyPositions = new List<Vector2>();
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         spawnObjects();
     }
@@ -29,38 +32,43 @@ public class GameController : MonoBehaviour
 
         Vector2 playerPos = _player.position;
 
-        int aboveCount = _enemyPositions.Count(pos => pos.y > playerPos.y && pos.y - playerPos.y < RangeToSpawnEnemies);
+        float aboveWithBuffer = playerPos.y + SpawnBufferFromPlayerAbove;
+        float belowWithBuffer = playerPos.y - SpawnBufferFromPlayerBelow;
+        float rightWithBuffer = playerPos.x + SpawnBufferFromPlayerHorizontal;
+        float leftWithBuffer = playerPos.x - SpawnBufferFromPlayerHorizontal;
+
+        int aboveCount = _enemyPositions.Count(pos => pos.y > playerPos.y && pos.y - playerPos.y < RangeToSpawnObjects + SpawnBufferFromPlayerAbove);
         for (int i = aboveCount; i < NumEnemies; i++)
         {
-            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x - RangeToSpawnEnemies, playerPos.x + RangeToSpawnEnemies),
-                                            Random.Range(playerPos.y, playerPos.y + RangeToSpawnEnemies));
+            Vector2 spawnPos = new Vector2(Random.Range(leftWithBuffer - RangeToSpawnObjects, rightWithBuffer + RangeToSpawnObjects),
+                                            Random.Range(aboveWithBuffer, aboveWithBuffer + RangeToSpawnObjects));
             _enemyPositions.Add(spawnPos);
             Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
         }
 
-        int belowCount = _enemyPositions.Count(pos => pos.y < playerPos.y && playerPos.y - pos.y < RangeToSpawnEnemies);
+        int belowCount = _enemyPositions.Count(pos => pos.y < playerPos.y && playerPos.y - pos.y < RangeToSpawnObjects + SpawnBufferFromPlayerBelow);
         for (int i = belowCount; i < NumEnemies; i++)
         {
-            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x - RangeToSpawnEnemies, playerPos.x + RangeToSpawnEnemies),
-                                            Random.Range(playerPos.y - RangeToSpawnEnemies, playerPos.y));
+            Vector2 spawnPos = new Vector2(Random.Range(leftWithBuffer - RangeToSpawnObjects, rightWithBuffer + RangeToSpawnObjects),
+                                            Random.Range(belowWithBuffer - RangeToSpawnObjects, belowWithBuffer));
             _enemyPositions.Add(spawnPos);
             Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
         }
 
-        int rightCount = _enemyPositions.Count(pos => pos.x > playerPos.x && pos.x - playerPos.x < RangeToSpawnEnemies);
+        int rightCount = _enemyPositions.Count(pos => pos.x > playerPos.x && pos.x - playerPos.x < RangeToSpawnObjects + SpawnBufferFromPlayerHorizontal);
         for (int i = rightCount; i < NumEnemies; i++)
         {
-            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x, playerPos.x + RangeToSpawnEnemies),
-                                            Random.Range(playerPos.y - RangeToSpawnEnemies, playerPos.y + RangeToSpawnEnemies));
+            Vector2 spawnPos = new Vector2(Random.Range(rightWithBuffer, rightWithBuffer + RangeToSpawnObjects),
+                                            Random.Range(belowWithBuffer - RangeToSpawnObjects, aboveWithBuffer + RangeToSpawnObjects));
             _enemyPositions.Add(spawnPos);
             Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
         }
 
-        int leftCount = _enemyPositions.Count(pos => pos.x < playerPos.x && playerPos.x - pos.x < RangeToSpawnEnemies);
+        int leftCount = _enemyPositions.Count(pos => pos.x < playerPos.x && playerPos.x - pos.x < RangeToSpawnObjects + SpawnBufferFromPlayerHorizontal);
         for (int i = leftCount; i < NumEnemies; i++)
         {
-            Vector2 spawnPos = new Vector2(Random.Range(playerPos.x - RangeToSpawnEnemies, playerPos.x),
-                                            Random.Range(playerPos.y - RangeToSpawnEnemies, playerPos.y + RangeToSpawnEnemies));
+            Vector2 spawnPos = new Vector2(Random.Range(leftWithBuffer - RangeToSpawnObjects, leftWithBuffer),
+                                            Random.Range(belowWithBuffer - RangeToSpawnObjects, aboveWithBuffer + RangeToSpawnObjects));
             _enemyPositions.Add(spawnPos);
             Instantiate(PlaneEnemy, spawnPos, Quaternion.identity);
         }
