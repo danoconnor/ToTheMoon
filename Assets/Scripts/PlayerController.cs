@@ -2,6 +2,8 @@
 
 public class PlayerController : MonoBehaviour
 {
+    public static readonly string PlayerTag = "Player";
+
     public float BoostAcceleration;
     public float RotationRate;
     public float MaxSpeed;
@@ -9,20 +11,24 @@ public class PlayerController : MonoBehaviour
     public GameObject MainCameraObject;
     public float CameraOffset;
 
-    void Start()
+    public void Start()
     {
         _cameraPosition = MainCameraObject.GetComponent<Transform>();
         _player = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _sprites = Resources.LoadAll<Sprite>(SpriteName);
+        _gameController = GameController.SharedInstance;
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
-        updateRotation();
-        updateVelocity();
-        updateSprite();
-        updateCameraPosition();
+        if (!_gameController.Paused)
+        {
+            updateRotation();
+            updateVelocity();
+            updateSprite();
+            updateCameraPosition();
+        }
     }
 
     private void updateRotation()
@@ -60,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
     private void updateVelocity()
     {
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (!Input.GetKey(KeyCode.DownArrow))
         {
             float rotationInRads = _player.rotation * Mathf.Deg2Rad;
             Vector2 direction = new Vector2(-1 * Mathf.Sin(rotationInRads), Mathf.Cos(rotationInRads));
@@ -79,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private void updateSprite()
     {
-        _spriteRenderer.sprite = Input.GetKey(KeyCode.UpArrow) ? _sprites[1] : _sprites[0];
+        _spriteRenderer.sprite = Input.GetKey(KeyCode.DownArrow) ? _sprites[0] : _sprites[1];
     }
 
     private void updateCameraPosition()
@@ -91,8 +97,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _player;
     private SpriteRenderer _spriteRenderer;
     private Sprite[] _sprites;
-
-    private float _maxSpeed;
+    private GameController _gameController;
 
     private const string SpriteName = "sprites/player";
 }
