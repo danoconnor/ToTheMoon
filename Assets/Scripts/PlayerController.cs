@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public GameObject MainCameraObject;
     public float CameraOffset;
 
+    public float MaxHeight;
+
     public void Start()
     {
         _cameraPosition = MainCameraObject.GetComponent<Transform>();
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
             updateVelocity();
             updateSprite();
             updateCameraPosition();
+            updateMaxHeight();
         }
     }
 
@@ -91,6 +94,14 @@ public class PlayerController : MonoBehaviour
     private void updateCameraPosition()
     {
         _cameraPosition.position = new Vector3(_player.position.x, _player.position.y + CameraOffset, _cameraPosition.position.z);
+    }
+
+    private void updateMaxHeight()
+    {
+        if (_player.position.y > MaxHeight)
+        {
+            MaxHeight = _player.position.y;
+        }
     }
 
     private Transform _cameraPosition;

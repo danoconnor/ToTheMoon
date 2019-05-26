@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Models;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class GameController : MonoBehaviour
     public bool Paused { get; private set; }
 
     public GameState GameState { get; private set; }
+    public FlightData LastFlightData { get; private set; }
 
     public void Start()
     {
@@ -48,6 +50,11 @@ public class GameController : MonoBehaviour
 
     public void OnDisable()
     {
+        if (GameState == null)
+        {
+            return;
+        }
+
         // Save data to disk
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream file = File.Create(getGameStateFilePath());
@@ -57,17 +64,21 @@ public class GameController : MonoBehaviour
         file.Close();
     }
 
-    public void Update()
+    public void SetGameOver(FlightData flightData)
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Paused = !Paused;
-        }
+        LastFlightData = flightData;
+        GameState.Money += MoneyForAltitude(LastFlightData.MaxHeight) + MoneyForDuration(LastFlightData.FlightTime) + LastFlightData.BonusMoney;
+        SceneManager.LoadScene(_gameOverSceneName, LoadSceneMode.Single);
     }
 
-    public void SetGameOver()
+    public int MoneyForAltitude(float altitude)
     {
-        SceneManager.LoadScene(_gameOverSceneName, LoadSceneMode.Single);
+        return (int)(altitude / 10);
+    }
+
+    public int MoneyForDuration(TimeSpan duration)
+    {
+        return (int)(duration.TotalSeconds * 2);
     }
 
     private string getGameStateFilePath()
@@ -75,5 +86,5 @@ public class GameController : MonoBehaviour
         return Application.persistentDataPath + "/GameState.dat";
     }
 
-    private static readonly string _gameOverSceneName = "GameOverScene";
+    private static readonly string _gameOverSceneName = "FlightResultsScene";
 }

@@ -6,16 +6,18 @@ public class GroundCollider : MonoBehaviour
 {
     public void Start()
     {
-        _gameController = GameController.SharedInstance;
+        _flightController = GameObject.FindGameObjectWithTag(FlightController.FlightControllerTag).GetComponent<FlightController>();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == PlayerController.PlayerTag)
         {
-            _gameController.SetGameOver();
+            _flightController.GameOver();
         }
+
+        Destroy(collision.gameObject);
     }
 
-    private GameController _gameController;
+    private FlightController _flightController;
 }
