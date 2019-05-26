@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Models;
+﻿using Assets.Scripts.Constants;
+using Assets.Scripts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,14 +41,11 @@ public class FlightResultsUIController : MonoBehaviour
 
     public void FlyAgain()
     {
-        SceneManager.LoadScene(_gameSceneName, LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneNames.Game, LoadSceneMode.Single);
     }
 
     public void GoToUpgrades()
     {
-        SceneManager.LoadScene(_upgradeSceneName, LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneNames.Upgrades, LoadSceneMode.Single);
     }
-
-    private static readonly string _gameSceneName = "GameScene";
-    private static readonly string _upgradeSceneName = "GameScene"; // TODO
 }

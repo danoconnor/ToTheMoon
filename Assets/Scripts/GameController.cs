@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Models;
+﻿using Assets.Scripts.Constants;
+using Assets.Scripts.Models;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -35,7 +36,7 @@ public class GameController : MonoBehaviour
     public void OnEnable()
     {
         // Load data from disk
-        if (File.Exists(getGameStateFilePath()))
+        if (HasSavedData())
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream file = File.Open(getGameStateFilePath(), FileMode.Open);
@@ -45,6 +46,7 @@ public class GameController : MonoBehaviour
         else
         {
             GameState = new GameState();
+            GameState.InitializeDefaultValues();
         }
     }
 
@@ -68,7 +70,7 @@ public class GameController : MonoBehaviour
     {
         LastFlightData = flightData;
         GameState.Money += MoneyForAltitude(LastFlightData.MaxHeight) + MoneyForDuration(LastFlightData.FlightTime) + LastFlightData.BonusMoney;
-        SceneManager.LoadScene(_gameOverSceneName, LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneNames.FlightResults, LoadSceneMode.Single);
     }
 
     public int MoneyForAltitude(float altitude)
@@ -81,10 +83,20 @@ public class GameController : MonoBehaviour
         return (int)(duration.TotalSeconds * 2);
     }
 
+    public bool HasSavedData()
+    {
+        return File.Exists(getGameStateFilePath());
+    }
+
+    public void ClearSavedData()
+    {
+        // Just reset the GameState object, when the game closes we'll write it to disk and overwrite the old data there
+        GameState = new GameState();
+        GameState.InitializeDefaultValues();
+    }
+
     private string getGameStateFilePath()
     {
         return Application.persistentDataPath + "/GameState.dat";
     }
-
-    private static readonly string _gameOverSceneName = "FlightResultsScene";
 }
